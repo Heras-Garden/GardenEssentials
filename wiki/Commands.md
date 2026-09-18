@@ -1,0 +1,26 @@
+# Commands
+
+- `/balance`
+- `/pay <player> <amount>`
+- `/spawn`
+- `/setspawn`
+- `/warp <name>`
+- `/warps`
+- `/setwarp <name>`
+- `/delwarp <name>`
+- `/tpa <player>`
+- `/tpaccept`
+- `/tpdeny`
+- `/msg <player> <message>`
+- `/reply <message>`
+- `/back`
+- `/afk`
+- `/link`
+- `/link status`
+- `/link unlink`
+- `/report bug <description>`
+- `/report player <player> <reason>`
+- `/staffalert <message>`
+- `/heal`
+- `/feed`
+- `/fly`
