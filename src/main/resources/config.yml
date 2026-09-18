@@ -1,0 +1,12 @@
+teleport-requests:
+  expire-seconds: 60
+
+iris:
+  server-lifecycle-alerts: true
+  player-join-leave-alerts: false
+  minecraft-xp:
+    enabled: true
+    interval-minutes: 5
+    amount: 10
+  account-link:
+    code-expire-minutes: 10

@@ -1,0 +1,102 @@
+name: GardenEssentials
+version: '${project.version}'
+main: com.herasgarden.gardenessentials.GardenEssentials
+api-version: '26.2'
+author: Hera's Garden
+website: https://herasgarden.net
+description: Garden-native teleports, messaging, moderation utilities, and Iris reports.
+depend: [GardenCore]
+
+commands:
+  balance:
+    aliases: [bal, money]
+    description: View your Obol balance.
+  pay:
+    description: Pay another player in Obols.
+    usage: /pay <player> <amount>
+  spawn:
+    description: Teleport to the Garden spawn.
+  setspawn:
+    description: Set the Garden spawn.
+  warp:
+    description: Teleport to a server warp.
+    usage: /warp <name>
+  warps:
+    description: List server warps.
+  setwarp:
+    description: Set a server warp.
+    usage: /setwarp <name>
+  delwarp:
+    description: Delete a server warp.
+    usage: /delwarp <name>
+  tpa:
+    description: Request to teleport to another player.
+    usage: /tpa <player>
+  tpaccept:
+    description: Accept a teleport request.
+  tpdeny:
+    description: Deny a teleport request.
+  msg:
+    aliases: [tell, whisper, w]
+    description: Send a private message.
+    usage: /msg <player> <message>
+  reply:
+    aliases: [r]
+    description: Reply to your latest private-message partner.
+    usage: /reply <message>
+  back:
+    description: Return to your previous Garden teleport or death location.
+  afk:
+    description: Toggle your AFK status.
+  link:
+    description: Link your Minecraft account to Iris/Discord.
+    usage: /link [status|unlink]
+  heal:
+    description: Heal yourself or another player.
+    usage: /heal [player]
+  feed:
+    description: Feed yourself or another player.
+    usage: /feed [player]
+  fly:
+    description: Toggle flight for yourself or another player.
+    usage: /fly [player]
+  report:
+    description: Report a bug or player to staff through Iris.
+    usage: /report <bug <description>|player <player> <reason>>
+  staffalert:
+    description: Send a Garden staff alert to Iris and Discord.
+    usage: /staffalert <message>
+
+permissions:
+  gardenessentials.balance:
+    default: true
+  gardenessentials.pay:
+    default: true
+  gardenessentials.spawn:
+    default: true
+  gardenessentials.setspawn:
+    default: op
+  gardenessentials.warp:
+    default: true
+  gardenessentials.warp.admin:
+    default: op
+  gardenessentials.tpa:
+    default: true
+  gardenessentials.msg:
+    default: true
+  gardenessentials.back:
+    default: true
+  gardenessentials.afk:
+    default: true
+  gardenessentials.link:
+    default: true
+  gardenessentials.heal:
+    default: op
+  gardenessentials.feed:
+    default: op
+  gardenessentials.fly:
+    default: op
+  gardenessentials.report:
+    default: true
+  gardenessentials.staffalert:
+    default: op
