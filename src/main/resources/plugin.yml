@@ -66,6 +66,10 @@ commands:
   staffalert:
     description: Send a Garden staff alert to Iris and Discord.
     usage: /staffalert <message>
+  deleteitem:
+    description: Delete the non-player entity you are looking at.
+    usage: /deleteitem
+    permission: gardenessentials.deleteitem
 
 permissions:
   gardenessentials.balance:
@@ -99,4 +103,7 @@ permissions:
   gardenessentials.report:
     default: true
   gardenessentials.staffalert:
+    default: op
+  gardenessentials.deleteitem:
+    description: Delete targeted non-player entities for cleanup.
     default: op

@@ -2,6 +2,7 @@ package com.herasgarden.gardenessentials;
 
 import com.herasgarden.gardencore.api.GardenPlatform;
 import com.herasgarden.gardencore.api.integration.IntegrationEventType;
+import com.herasgarden.gardenessentials.command.DeleteItemCommand;
 import com.herasgarden.gardenessentials.command.LinkCommand;
 import com.herasgarden.gardenessentials.command.ReportCommand;
 import com.herasgarden.gardenessentials.command.StaffAlertCommand;
@@ -74,6 +75,11 @@ public final class GardenEssentials extends JavaPlugin {
         PluginCommand staffAlert = getCommand("staffalert");
         if (staffAlert != null) {
             staffAlert.setExecutor(new StaffAlertCommand(platform));
+        }
+
+        PluginCommand deleteItem = getCommand("deleteitem");
+        if (deleteItem != null) {
+            deleteItem.setExecutor(new DeleteItemCommand());
         }
 
         LinkCommand linkCommand = new LinkCommand(links);
