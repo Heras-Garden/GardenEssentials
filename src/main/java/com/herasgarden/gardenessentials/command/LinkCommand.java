@@ -12,11 +12,16 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
 public final class LinkCommand implements CommandExecutor, TabCompleter {
+    private static final ZoneId DISPLAY_ZONE = ZoneId.of("America/New_York");
+    private static final DateTimeFormatter DISPLAY_TIME = DateTimeFormatter.ofPattern("M/d/yyyy 'at' h:mm a", Locale.US);
+
     private final MinecraftLinkService links;
 
     public LinkCommand(MinecraftLinkService links) {
@@ -54,7 +59,7 @@ public final class LinkCommand implements CommandExecutor, TabCompleter {
             EssentialsMessages.send(player, "Your one-time Iris link code is " + code.code() + ".");
             EssentialsMessages.send(player,
                     "In Discord, run /minecraft-link connect and enter " + code.code()
-                            + ". The code expires at " + Instant.ofEpochMilli(code.expiresAt()) + ".");
+                            + ". The code expires at " + formatTime(code.expiresAt()) + ".");
         } catch (SQLException exception) {
             EssentialsMessages.send(player, "Account linking could not be updated right now.");
         }
@@ -69,8 +74,12 @@ public final class LinkCommand implements CommandExecutor, TabCompleter {
         }
         EssentialsMessages.send(player,
                 "Linked to Discord account " + status.get().discordId()
-                        + ". Linked at " + Instant.ofEpochMilli(status.get().linkedAt()) + ".");
+                        + ". Linked at " + formatTime(status.get().linkedAt()) + ".");
         return true;
+    }
+
+    private String formatTime(long epochMillis) {
+        return DISPLAY_TIME.format(Instant.ofEpochMilli(epochMillis).atZone(DISPLAY_ZONE));
     }
 
     private boolean unlink(Player player) throws SQLException {
