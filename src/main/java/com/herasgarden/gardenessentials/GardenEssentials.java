@@ -95,8 +95,8 @@ public final class GardenEssentials extends JavaPlugin {
                     platform,
                     utilities,
                     links,
-                    getConfig().getInt("iris.minecraft-xp.amount", 10),
-                    getConfig().getLong("iris.minecraft-xp.interval-minutes", 5L));
+                    getConfig().getInt("iris.minecraft-xp.amount", 15),
+                    getConfig().getLong("iris.minecraft-xp.interval-minutes", 30L));
             minecraftXp.start();
         }
 

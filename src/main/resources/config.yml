@@ -6,7 +6,7 @@ iris:
   player-join-leave-alerts: false
   minecraft-xp:
     enabled: true
-    interval-minutes: 5
-    amount: 10
+    interval-minutes: 30
+    amount: 15
   account-link:
     code-expire-minutes: 10
