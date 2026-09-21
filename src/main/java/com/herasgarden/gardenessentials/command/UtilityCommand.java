@@ -85,6 +85,10 @@ public final class UtilityCommand implements CommandExecutor, TabCompleter {
             return true;
         }
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        if (!target.isOnline() && !target.hasPlayedBefore()) {
+            EssentialsMessages.send(player, "That player has not joined this server before. No Obols were withdrawn.");
+            return true;
+        }
         if (target.getUniqueId().equals(player.getUniqueId())) {
             EssentialsMessages.send(player, "You cannot pay yourself.");
             return true;
@@ -108,7 +112,8 @@ public final class UtilityCommand implements CommandExecutor, TabCompleter {
             EssentialsMessages.send(player, "The payment could not be completed. Your Obols were returned.");
             return true;
         }
-        EssentialsMessages.send(player, "Paid " + target.getName() + " " + platform.currency().symbol() + " " + amount + ".");
+        String targetName = target.getName() == null ? args[0] : target.getName();
+        EssentialsMessages.send(player, "Paid " + targetName + " " + platform.currency().symbol() + " " + amount + ".");
         if (target.isOnline() && target.getPlayer() != null) {
             EssentialsMessages.send(target.getPlayer(), player.getName() + " paid you "
                     + platform.currency().symbol() + " " + amount + ".");

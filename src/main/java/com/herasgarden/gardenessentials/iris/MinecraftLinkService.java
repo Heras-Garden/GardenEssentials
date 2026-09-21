@@ -29,43 +29,57 @@ public final class MinecraftLinkService {
     }
 
     public LinkCode issue(Player player) throws SQLException {
-        long now = System.currentTimeMillis();
-        long expiresAt = now + expiryMillis;
-        String code = randomCode();
-        String hash = hash(code);
+        SQLException lastCollision = null;
+        for (int attempt = 0; attempt < 5; attempt++) {
+            long now = System.currentTimeMillis();
+            long expiresAt = now + expiryMillis;
+            String code = randomCode();
+            String hash = hash(code);
 
-        try (Connection connection = platform.storage().connection()) {
-            connection.setAutoCommit(false);
-            try {
-                try (PreparedStatement invalidate = connection.prepareStatement(
-                        "UPDATE gc_minecraft_link_codes SET consumed_at = ? "
-                                + "WHERE player_uuid = ? AND consumed_at IS NULL")) {
-                    invalidate.setLong(1, now);
-                    invalidate.setString(2, player.getUniqueId().toString());
-                    invalidate.executeUpdate();
-                }
+            try (Connection connection = platform.storage().connection()) {
+                connection.setAutoCommit(false);
+                try {
+                    try (PreparedStatement invalidate = connection.prepareStatement(
+                            "UPDATE gc_minecraft_link_codes SET consumed_at = ? "
+                                    + "WHERE player_uuid = ? AND consumed_at IS NULL")) {
+                        invalidate.setLong(1, now);
+                        invalidate.setString(2, player.getUniqueId().toString());
+                        invalidate.executeUpdate();
+                    }
 
-                try (PreparedStatement insert = connection.prepareStatement(
-                        "INSERT INTO gc_minecraft_link_codes "
-                                + "(code_hash, player_uuid, player_name, created_at, expires_at, consumed_at) "
-                                + "VALUES (?, ?, ?, ?, ?, NULL)")) {
-                    insert.setString(1, hash);
-                    insert.setString(2, player.getUniqueId().toString());
-                    insert.setString(3, player.getName());
-                    insert.setLong(4, now);
-                    insert.setLong(5, expiresAt);
-                    insert.executeUpdate();
+                    try (PreparedStatement insert = connection.prepareStatement(
+                            "INSERT INTO gc_minecraft_link_codes "
+                                    + "(code_hash, player_uuid, player_name, created_at, expires_at, consumed_at) "
+                                    + "VALUES (?, ?, ?, ?, ?, NULL)")) {
+                        insert.setString(1, hash);
+                        insert.setString(2, player.getUniqueId().toString());
+                        insert.setString(3, player.getName());
+                        insert.setLong(4, now);
+                        insert.setLong(5, expiresAt);
+                        insert.executeUpdate();
+                    }
+                    connection.commit();
+                    return new LinkCode(code, expiresAt);
+                } catch (SQLException exception) {
+                    connection.rollback();
+                    if (duplicateKey(exception)) {
+                        lastCollision = exception;
+                        continue;
+                    }
+                    throw exception;
+                } catch (RuntimeException exception) {
+                    connection.rollback();
+                    throw exception;
+                } finally {
+                    connection.setAutoCommit(true);
                 }
-                connection.commit();
-            } catch (SQLException | RuntimeException exception) {
-                connection.rollback();
-                throw exception;
-            } finally {
-                connection.setAutoCommit(true);
             }
         }
+        throw new SQLException("Could not generate a unique Minecraft link code after several attempts.", lastCollision);
+    }
 
-        return new LinkCode(code, expiresAt);
+    private boolean duplicateKey(SQLException exception) {
+        return exception.getErrorCode() == 1062 || "23000".equals(exception.getSQLState());
     }
 
     public Optional<LinkStatus> status(UUID playerId) throws SQLException {
