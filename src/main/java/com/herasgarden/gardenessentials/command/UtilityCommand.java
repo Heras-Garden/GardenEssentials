@@ -65,6 +65,7 @@ public final class UtilityCommand implements CommandExecutor, TabCompleter {
             case "heal" -> heal(sender, args);
             case "feed" -> feed(sender, args);
             case "fly" -> fly(sender, args);
+            case "hat" -> hat(sender);
             default -> false;
         };
     }
@@ -417,6 +418,26 @@ public final class UtilityCommand implements CommandExecutor, TabCompleter {
         EssentialsMessages.send(sender, "This command must be used in-game.");
         return null;
     }
+
+    private boolean hat(CommandSender sender) {
+        Player player = player(sender);
+        if (player == null || !allowed(player, "gardenessentials.hat")) return true;
+
+        org.bukkit.inventory.ItemStack hand = player.getInventory().getItemInMainHand();
+        if (hand.getType().isAir()) {
+            EssentialsMessages.send(player, "Hold the item you want to wear in your main hand.");
+            return true;
+        }
+
+        org.bukkit.inventory.ItemStack previous = player.getInventory().getHelmet();
+        player.getInventory().setHelmet(hand.clone());
+        player.getInventory().setItemInMainHand(previous == null
+                ? new org.bukkit.inventory.ItemStack(org.bukkit.Material.AIR)
+                : previous);
+        EssentialsMessages.send(player, "Hat equipped.");
+        return true;
+    }
+
 
     private boolean allowed(Player player, String permission) {
         if (player.hasPermission(permission)) return true;
