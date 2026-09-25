@@ -1,7 +1,9 @@
 package com.herasgarden.gardenessentials;
 
 import com.herasgarden.gardencore.api.GardenPlatform;
+import com.herasgarden.gardencore.api.calendar.GardenCalendar;
 import com.herasgarden.gardencore.api.integration.IntegrationEventType;
+import com.herasgarden.gardenessentials.command.CalendarCommand;
 import com.herasgarden.gardenessentials.command.DeleteItemCommand;
 import com.herasgarden.gardenessentials.command.LinkCommand;
 import com.herasgarden.gardenessentials.command.ReportCommand;
@@ -37,6 +39,15 @@ public final class GardenEssentials extends JavaPlugin {
         }
         platform = registration.getProvider();
 
+        RegisteredServiceProvider<GardenCalendar> calendarRegistration =
+                getServer().getServicesManager().getRegistration(GardenCalendar.class);
+        if (calendarRegistration == null || calendarRegistration.getProvider() == null) {
+            getLogger().severe("GardenCore calendar service is unavailable.");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        GardenCalendar calendar = calendarRegistration.getProvider();
+
         try {
             EssentialsSchema.ensure(platform.storage());
         } catch (SQLException exception) {
@@ -63,6 +74,13 @@ public final class GardenEssentials extends JavaPlugin {
                 command.setExecutor(utilities);
                 command.setTabCompleter(utilities);
             }
+        }
+
+        CalendarCommand calendarCommand = new CalendarCommand(calendar);
+        PluginCommand calendarRoot = getCommand("calendar");
+        if (calendarRoot != null) {
+            calendarRoot.setExecutor(calendarCommand);
+            calendarRoot.setTabCompleter(calendarCommand);
         }
 
         ReportCommand reports = new ReportCommand(platform);
