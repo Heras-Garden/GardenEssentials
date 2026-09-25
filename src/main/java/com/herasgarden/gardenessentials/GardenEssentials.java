@@ -57,7 +57,7 @@ public final class GardenEssentials extends JavaPlugin {
                 "balance", "pay", "spawn", "setspawn",
                 "warp", "warps", "setwarp", "delwarp",
                 "tpa", "tpaccept", "tpdeny",
-                "msg", "reply", "back", "afk", "heal", "feed", "fly")) {
+                "msg", "reply", "back", "afk", "heal", "feed", "fly", "hat")) {
             PluginCommand command = getCommand(commandName);
             if (command != null) {
                 command.setExecutor(utilities);
