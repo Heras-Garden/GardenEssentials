@@ -60,6 +60,9 @@ commands:
   fly:
     description: Toggle flight for yourself or another player.
     usage: /fly [player]
+  calendar:
+    description: View Garden time or configure the calendar HUD.
+    usage: /calendar [hud <on|off>]
   report:
     description: Report a bug or player to staff through Iris.
     usage: /report <bug <description>|player <player> <reason>>
@@ -100,6 +103,8 @@ permissions:
     default: op
   gardenessentials.fly:
     default: op
+  gardenessentials.calendar:
+    default: true
   gardenessentials.report:
     default: true
   gardenessentials.staffalert:
